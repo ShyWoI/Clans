@@ -225,6 +225,7 @@ clans:
           error-config: "[prefix]&cError al recargar config.yml."
           error-locale: "[prefix]&cError al recargar localizaciones."
         penitence:
+          description: "Administrar penitencias de jugadores"
           clear:
             description: "Elimina la penitencia de un jugador."
             usage: "Uso: [label] penitence clear <jugador>"

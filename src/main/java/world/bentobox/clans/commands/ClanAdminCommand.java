@@ -29,19 +29,14 @@ public class ClanAdminCommand extends CompositeCommand {
     @Override
     public void setup() {
         setPermission("clans.admin");
-        // Descripción temporal
-        setDescription("Admin clan commands");
+        setDescription("clans.commands.admin.clan.description");
         setUsage("<comando>");
     }
 
     private void registerSubCommands() {
         // Registrar subcomandos
         new ClanReloadCommand(clans, this);
-        new PenitenceClearCommand(clans, this);
-        // Actualizar la descripción con la traducción
-        if (clans != null) {
-            setDescription(clans.getTranslation(null, "clans.commands.admin.clan.description"));
-        }
+        new PenitenceCommand(clans, this);
     }
 
     @Override
@@ -70,8 +65,7 @@ public class ClanAdminCommand extends CompositeCommand {
         @Override
         public void setup() {
             setPermission("clans.admin.reload");
-            // Descripción temporal
-            setDescription("Reload clans configuration");
+            setDescription("clans.commands.admin.clan.reload.description");
             setUsage("");
         }
 
@@ -102,6 +96,42 @@ public class ClanAdminCommand extends CompositeCommand {
             }
             user.sendMessage(clans.getTranslation(user, "clans.commands.admin.clan.reload.success"));
             return true;
+        }
+    }
+
+    public static class PenitenceCommand extends CompositeCommand {
+        private final Clans clans;
+
+        public PenitenceCommand(Clans addon, CompositeCommand parent) {
+            super(addon, parent, "penitence");
+            this.clans = addon;
+            // Programar el registro de subcomandos para el próximo tick
+            if (addon != null) {
+                Bukkit.getScheduler().runTask(addon.getPlugin(), this::registerSubCommands);
+            } else {
+                getLogger().warning("Advertencia: addon es null en PenitenceCommand. Los subcomandos no se registrarán.");
+            }
+        }
+
+        @Override
+        public void setup() {
+            setPermission("clans.admin.penitence");
+            setDescription("clans.commands.admin.penitence.description");
+            setUsage("<comando>");
+        }
+
+        private void registerSubCommands() {
+            // Registrar subcomandos de penitence
+            new PenitenceClearCommand(clans, this);
+        }
+
+        @Override
+        public boolean execute(User user, String label, List<String> args) {
+            if (args.isEmpty()) {
+                showHelp(this, user);
+                return true;
+            }
+            return false;
         }
     }
 

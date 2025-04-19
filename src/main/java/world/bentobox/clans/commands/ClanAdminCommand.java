@@ -29,8 +29,19 @@ public class ClanAdminCommand extends CompositeCommand {
     @Override
     public void setup() {
         setPermission("clans.admin");
-        setDescription("clans.commands.admin.clan.description");
+        setDescription("Temporal description"); // Descripción temporal
         setUsage("<comando>");
+        // Programar la configuración de traducciones
+        if (getAddon() != null) {
+            Bukkit.getScheduler().runTask(getAddon().getPlugin(), this::configure);
+        }
+    }
+
+    private void configure() {
+        // Actualizar con la traducción
+        if (clans != null) {
+            setDescription(clans.getTranslation(null, "clans.commands.admin.clan.description"));
+        }
     }
 
     private void registerSubCommands() {
@@ -65,7 +76,7 @@ public class ClanAdminCommand extends CompositeCommand {
         @Override
         public void setup() {
             setPermission("clans.admin.reload");
-            setDescription("clans.commands.admin.clan.reload.description");
+            setDescription("Temporal description"); // Descripción temporal
             setUsage("");
         }
 
@@ -116,8 +127,19 @@ public class ClanAdminCommand extends CompositeCommand {
         @Override
         public void setup() {
             setPermission("clans.admin.penitence");
-            setDescription("clans.commands.admin.penitence.description");
+            setDescription("Temporal description"); // Descripción temporal
             setUsage("<comando>");
+            // Programar la configuración de traducciones
+            if (getAddon() != null) {
+                Bukkit.getScheduler().runTask(getAddon().getPlugin(), this::configure);
+            }
+        }
+
+        private void configure() {
+            // Actualizar con la traducción
+            if (clans != null) {
+                setDescription(clans.getTranslation(null, "clans.commands.admin.penitence.description"));
+            }
         }
 
         private void registerSubCommands() {
@@ -141,13 +163,27 @@ public class ClanAdminCommand extends CompositeCommand {
         public PenitenceClearCommand(Clans addon, CompositeCommand parent) {
             super(addon, parent, "clear");
             this.clans = addon;
+            // Programar la configuración para el próximo tick
+            if (addon != null) {
+                Bukkit.getScheduler().runTask(addon.getPlugin(), this::configure);
+            } else {
+                getLogger().warning("Advertencia: addon es null en PenitenceClearCommand. La configuración no se ejecutará.");
+            }
         }
 
         @Override
         public void setup() {
             setPermission("clans.admin.penitence");
-            setDescription("clans.commands.admin.penitence.clear.description");
-            setUsage("clans.commands.admin.penitence.clear.usage");
+            setDescription("Temporal description"); // Descripción temporal
+            setUsage("Temporal usage");
+        }
+
+        private void configure() {
+            // Actualizar con la traducción
+            if (clans != null) {
+                setDescription(clans.getTranslation(null, "clans.commands.admin.penitence.clear.description"));
+                setUsage(clans.getTranslation(null, "clans.commands.admin.penitence.clear.usage"));
+            }
         }
 
         @Override
@@ -157,7 +193,7 @@ public class ClanAdminCommand extends CompositeCommand {
                 return false;
             }
 
-            String targetName = args.getFirst();
+            String targetName = args.get(0);
             OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(targetName);
             if (targetPlayer == null || !targetPlayer.hasPlayedBefore()) {
                 user.sendMessage(clans.getTranslation(user, "clans.commands.admin.penitence.clear.player-not-found",
@@ -166,6 +202,12 @@ public class ClanAdminCommand extends CompositeCommand {
             }
 
             User targetUser = User.getInstance(targetPlayer.getUniqueId());
+            // Verificar si el jugador está en penitencia
+            if (clans.getPenitenceRemainingTime(targetUser) == 0) {
+                user.sendMessage(clans.getTranslation(user, "clans.commands.admin.penitence.clear.not-in-penitence",
+                        "[player]", targetName));
+                return false;
+            }
             clans.clearPenitence(targetUser);
             return true;
         }
@@ -173,7 +215,7 @@ public class ClanAdminCommand extends CompositeCommand {
         @Override
         public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
             if (args.size() <= 1) {
-                String input = args.isEmpty() ? "" : args.getFirst().toLowerCase();
+                String input = args.isEmpty() ? "" : args.get(0).toLowerCase();
                 return Optional.of(Bukkit.getOnlinePlayers().stream()
                         .map(Player::getName)
                         .filter(name -> name.toLowerCase().startsWith(input))

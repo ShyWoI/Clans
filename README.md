@@ -1,6 +1,6 @@
 CLANS - BENTOBOX
 
-Placeholders:
+Placeholders:\n
 1. Información del Clan del Jugador
 Estos placeholders devuelven información sobre el clan al que pertenece el jugador.
 

@@ -1,0 +1,12 @@
+name: Clans
+main: world.bentobox.clans.ClansPladdon
+version: 1.0.0
+api-version: 1.21
+depend: [BentoBox]
+commands:
+  clan:
+    description: Comando principal para clanes
+    usage: /<command> <subcomando>
+  clanadmin:
+    description: Comando administrativo para clanes
+    usage: /<command> <subcomando>

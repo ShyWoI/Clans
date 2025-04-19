@@ -1,0 +1,48 @@
+# Clans Configuration [1.0.0]
+# Addon creado por ShyWol y AI Grok
+#
+# No cambiar!
+uniqueId: clans_config
+#
+# Habilita o no el sistema de clanes.
+enabled: true
+#
+# Lenguaje por defecto que debe usar el plugin
+locale: es-ES
+# Si el jugador tiene un lenguaje que no existe dentro de BentoBox/locales/Clans, el plugin debe usar el lenguaje:
+default-language: es-ES
+#
+# Mínimo de carácteres que debe contener el nombre de un clan
+minNameLength: 3
+# Máximo de carácteres que debe contener el nombre de un clan
+maxNameLength: 20
+#
+# Co-Lideres máximos que deben haber por clan
+maxCoLeaders: 2
+# Comandantes máximos por clan
+maxCommanders: 5
+# Miembros máximos inicialmente por clan
+maxMembers: 10
+#
+# Vault Integración
+# Costo para crear un clan
+creationCost: 1000
+# Reembolso al disolver un clan
+disbandRefunded: 500
+#
+# Tiempo de penitencia tras abandonar un clan (en segundos)
+# Establece enabled a false o time-seconds a 0 para desactivar
+penitence:
+  enabled: true
+  time-seconds: 3600
+#
+# Nombres de los rangos, editables para personalizar su visualización
+ranks:
+  leader: Líder
+  co_leaders: Co-líder
+  commanders: Comandante
+  members: Miembro
+#
+# Tiempo de espera para cambiar el tag del clan (en minutos)
+# Establece a 0 para desactivar el tiempo de espera
+tag-change-cooldown: 1440

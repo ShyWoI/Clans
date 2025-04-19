@@ -1,0 +1,17 @@
+name: Clans
+main: world.bentobox.clans.Clans
+version: 1.0.0
+api-version: 1.21
+authors: [ShyWol]
+softdepend: [BentoBox-AOneBlock]
+
+permissions:
+  clans.create:
+    description: Permite crear un clan
+    default: true
+  clans.disband:
+    description: Permite disolver un clan
+    default: true
+  clans.bypass-penitence:
+    description: Allows the player to bypass the penitence period when joining a clan.
+    default: op

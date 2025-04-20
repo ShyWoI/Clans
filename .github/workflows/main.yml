@@ -10,27 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Clona el repositorio
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Configura Java
-    - name: Set up JDK 21
+    - name: Set up JDK 11
       uses: actions/setup-java@v3
       with:
-        java-version: '21'
+        java-version: '11'
 
-    # Compila el proyecto con Maven y genera el .jar
     - name: Build JAR with Maven
       run: mvn clean package
 
-    # Crea el directorio esperado y mueve el .jar generado por Maven
     - name: Move JAR to expected path
       run: |
         mkdir -p out/artifacts/Clans_jar
         cp target/Clans.jar out/artifacts/Clans_jar/Clans.jar || echo "Error: Clans.jar not found in target/"
 
-    # Verifica que el archivo .jar exista
     - name: Check JAR existence
       run: |
         if [ ! -f out/artifacts/Clans_jar/Clans.jar ]; then
@@ -38,7 +33,6 @@ jobs:
           exit 1
         fi
 
-    # Crea el release en GitHub
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -50,7 +44,6 @@ jobs:
         draft: false
         prerelease: false
 
-    # Sube el .jar al release
     - name: Upload JAR
       uses: actions/upload-release-asset@v1
       env:

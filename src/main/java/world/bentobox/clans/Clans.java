@@ -1,3 +1,4 @@
+//Clase principal
 package world.bentobox.clans;
 
 import net.kyori.adventure.text.Component;

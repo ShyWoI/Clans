@@ -9,8 +9,5 @@
         <module name="Clans" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="clans" target="21" />
-    </bytecodeTargetLevel>
   </component>
 </project>

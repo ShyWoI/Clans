@@ -9,205 +9,71 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f94ee09e-e77d-4c27-b4fd-695ba4a5bec8" name="Changes" comment="Arreglo de mensajes y optimización ligera">
+    <list default="true" id="a7255f22-bfd4-4b93-8171-730851024a62" name="Changes" comment="Test">
+      <change afterPath="$PROJECT_DIR$/META-INF/MANIFEST.MF" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.github/workflows/release.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/artifacts/Clans_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Clans.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Clans.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/.idea/misc.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/.idea/workspace.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/main.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExportToHTMLSettings">
-    <option name="printScope" value="4" />
-    <option name="OUTPUT_DIRECTORY" value="https://github.com/ShyWoI/Clans.git" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Interface" />
-        <option value="package-info" />
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
-    <option name="PREVIOUS_COMMIT_AUTHORS">
-      <list>
-        <option value="ShyWoI &lt;jpjaramillob@libertadores.edu.co&gt;" />
-      </list>
-    </option>
-    <option name="PUSH_AUTO_UPDATE" value="true" />
-    <option name="PUSH_TAGS">
-      <GitPushTagMode>
-        <option name="argument" value="--follow-tags" />
-        <option name="title" value="Current Branch" />
-      </GitPushTagMode>
-    </option>
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="master" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;ShyWoI&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "ShyWoI"
   }
-}</component>
-  <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="c225df13-cf25-46c9-97c1-8f836502f652" />
-  </component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/ShyWoI/Clans.git&quot;,
-    &quot;accountId&quot;: &quot;c225df13-cf25-46c9-97c1-8f836502f652&quot;
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/ShyWoI/Clans.git",
+    "accountId": "d0fc753d-7b7b-419d-b0c3-534b90e10ef9"
   }
-}</component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 7
-}</component>
-  <component name="ProjectId" id="2vjQktTMvXISMc2dG3JA3PJdFgL" />
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
+  <component name="ProjectId" id="2vyZIKDeEbgSpk1Yv0Ub2GF4dIW" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Maven.ClansAOneBlock [clean,package].executor": "Run",
-    "Maven.ClansAOneBlock [clean].executor": "Run",
-    "Maven.ClansAOneBlock [dependency:tree].executor": "Run",
-    "Maven.ClansAOneBlock [install].executor": "Run",
-    "Maven.ClansAOneBlock [rm,-rf...].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "extract.method.default.visibility": "private",
+    "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/disfr/IdeaProjects/Clans/src/main/resources",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
+    "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.6045977",
-    "settings.editor.selected.configurable": "vcs.Git",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
     "vue.rearranger.settings.migration": "true"
-  },
-  "keyToStringList": {
-    "GitStage.ChangesTree.GroupingKeys": [
-      "directory",
-      "module",
-      "repository"
-    ]
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="world.bentobox.clans" />
-    </key>
-    <key name="ExtractSuperBase.RECENT_KEYS">
-      <recent name="world.bentobox.clans" />
-    </key>
-  </component>
-  <component name="RunAnythingCache">
-    <option name="myCommands">
-      <command value="mvn clean package" />
-      <command value="mvn dependency:tree" />
-      <command value="rm -rf ~/.m2/repository/world/bentobox/bentobox" />
-      <command value="rm -rf ~/.m2/repository/io/papermc/paper" />
-      <command value="mvn rm -rf ~/.m2/repository/world/bentobox/bentobox " />
-      <command value="mvn rm -rf ~/.m2/repository/world/bentobox/bentobox clean" />
-      <command value="mvn clean" />
-      <command value="mvn install" />
-    </option>
-  </component>
-  <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="Clans" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="Clans" />
-      <option name="filePath" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
-      <module name="Clans" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="Python.FlaskServer">
-      <module name="Clans" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="launchJavascriptDebuger" value="false" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="Tox" factoryName="Tox">
-      <module name="Clans" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <method v="2" />
-    </configuration>
-  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -216,101 +82,31 @@
       </set>
     </attachedChunks>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
-  <component name="SvnConfiguration">
-    <configuration />
-  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="f94ee09e-e77d-4c27-b4fd-695ba4a5bec8" name="Changes" comment="" />
-      <created>1744656151306</created>
+      <changelist id="a7255f22-bfd4-4b93-8171-730851024a62" name="Changes" comment="" />
+      <created>1745119194232</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1744656151306</updated>
-      <workItem from="1744656154909" duration="8428000" />
-      <workItem from="1744665944145" duration="7917000" />
-      <workItem from="1744674360752" duration="287000" />
-      <workItem from="1744674664249" duration="959000" />
-      <workItem from="1744675705477" duration="24217000" />
-      <workItem from="1744732010897" duration="41137000" />
-      <workItem from="1744804916650" duration="96200000" />
-      <workItem from="1744989722647" duration="3639000" />
-      <workItem from="1744993513556" duration="6571000" />
-      <workItem from="1745000238705" duration="182000" />
-      <workItem from="1745000605998" duration="19806000" />
-      <workItem from="1745077804309" duration="14257000" />
-      <workItem from="1745099915849" duration="17342000" />
-      <workItem from="1745117871779" duration="96000" />
+      <updated>1745119194232</updated>
+      <workItem from="1745119195325" duration="714000" />
     </task>
-    <task id="LOCAL-00001" summary="Version 1.0.0 - Snap for Clans Addon">
+    <task id="LOCAL-00001" summary="Test">
       <option name="closed" value="true" />
-      <created>1745102302893</created>
+      <created>1745119757727</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1745102302893</updated>
+      <updated>1745119757727</updated>
     </task>
-    <task id="LOCAL-00002" summary="Arreglo del /clanadmin penitence clear que aparecia en /clan (usuario)">
-      <option name="closed" value="true" />
-      <created>1745105893829</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1745105893829</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Arreglo del /clanadmin penitence clear que aparecia en /clan (usuario)">
-      <option name="closed" value="true" />
-      <created>1745106207845</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1745106207845</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Arreglo de mensajes y optimización ligera">
-      <option name="closed" value="true" />
-      <created>1745116187622</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1745116187622</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Arreglo de mensajes y optimización ligera">
-      <option name="closed" value="true" />
-      <created>1745116542695</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1745116542695</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="UnknownFeatures">
-    <option featureType="dependencySupport" implementationName="java:net.kyori:adventure-api" />
-    <option featureType="dependencySupport" implementationName="java:io.papermc.paper:paper-api" />
-    <option featureType="dependencySupport" implementationName="java:org.bukkit:bukkit" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="VcsManagerConfiguration">
-    <ignored-roots>
-      <path value="$PROJECT_DIR$" />
-    </ignored-roots>
-    <MESSAGE value="Version 1.0.0 - Snap for Clans Addon" />
-    <MESSAGE value="Arreglo del /clanadmin penitence clear que aparecia en /clan (usuario)" />
-    <MESSAGE value="Arreglo de mensajes y optimización ligera" />
-    <option name="LAST_COMMIT_MESSAGE" value="Arreglo de mensajes y optimización ligera" />
+    <MESSAGE value="Test" />
+    <option name="LAST_COMMIT_MESSAGE" value="Test" />
   </component>
 </project>

@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Clans_jar</output-path>
     <root id="archive" name="Clans.jar">
       <element id="module-output" name="Clans" />
-      <element id="dir-copy" path="$PROJECT_DIR$/src/main/resources" />
+      <element id="dir-copy" path="$USER_HOME$/IdeaProjects/Clans/src/main/resources" />
     </root>
   </artifact>
 </component>

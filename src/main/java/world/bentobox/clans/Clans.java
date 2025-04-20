@@ -1,4 +1,3 @@
-//Clase principal
 package world.bentobox.clans;
 
 import net.kyori.adventure.text.Component;
@@ -36,6 +35,7 @@ public class Clans extends Addon implements Listener {
     public final Map<UUID, LeaveRequest> leaveRequests = new HashMap<>();
     public final Map<UUID, KickRequest> kickRequests = new HashMap<>();
     public final Map<UUID, BanRequest> banRequests = new HashMap<>();
+    public final Map<UUID, TransferRequest> transferRequests = new HashMap<>(); // Nuevo mapa
     private final Map<UUID, Long> penitenceExpirations = new HashMap<>();
     public final Map<UUID, TagRequest> tagRequests = new HashMap<>();
     private world.bentobox.bentobox.database.Database<PenitenceData> penitenceDatabase;
@@ -97,7 +97,6 @@ public class Clans extends Addon implements Listener {
         }
     }
 
-    // Nueva clase para solicitudes de cambio de tag
     public static class TagRequest {
         public final String clanName;
         public final String newTag;
@@ -106,6 +105,18 @@ public class Clans extends Addon implements Listener {
         public TagRequest(String clanName, String newTag, long timestamp) {
             this.clanName = clanName;
             this.newTag = newTag;
+            this.timestamp = timestamp;
+        }
+    }
+
+    public static class TransferRequest {
+        public final ClanManager.Clan clan;
+        public final String targetUUID;
+        public final long timestamp;
+
+        public TransferRequest(ClanManager.Clan clan, String targetUUID, long timestamp) {
+            this.clan = clan;
+            this.targetUUID = targetUUID;
             this.timestamp = timestamp;
         }
     }
@@ -134,12 +145,10 @@ public class Clans extends Addon implements Listener {
                 return;
             }
         }
-        // Generar clan_list.yml si no existe
         File clanListFile = new File(panelsDir, "clan_list.yml");
         if (!clanListFile.exists()) {
             saveResource(clanListFile);
         }
-        // Generar clan_invite.yml si no existe
         File clanInviteFile = new File(panelsDir, "clan_invite.yml");
         if (!clanInviteFile.exists()) {
             saveResource(clanInviteFile);
@@ -229,11 +238,10 @@ public class Clans extends Addon implements Listener {
             @Override
             public void run() {
                 long currentTime = System.currentTimeMillis();
-                // Limpiar solicitudes de abandono expiradas
                 Iterator<Map.Entry<UUID, LeaveRequest>> leaveIterator = leaveRequests.entrySet().iterator();
                 while (leaveIterator.hasNext()) {
                     Map.Entry<UUID, LeaveRequest> entry = leaveIterator.next();
-                    if (currentTime - entry.getValue().timestamp >= 15000) { // 15 segundos
+                    if (currentTime - entry.getValue().timestamp >= 15000) {
                         User user = User.getInstance(entry.getKey());
                         if (user.isOnline()) {
                             user.sendMessage(getTranslation(user, "clans.commands.clan.leave.timeout"));
@@ -241,7 +249,6 @@ public class Clans extends Addon implements Listener {
                         leaveIterator.remove();
                     }
                 }
-                // Limpiar otras solicitudes
                 disbandRequests.entrySet().removeIf(entry -> {
                     if (currentTime - entry.getValue().timestamp >= 15000) {
                         User user = User.getInstance(entry.getKey());
@@ -282,7 +289,16 @@ public class Clans extends Addon implements Listener {
                     }
                     return false;
                 });
-                // Limpiar penitencias expiradas
+                transferRequests.entrySet().removeIf(entry -> {
+                    if (currentTime - entry.getValue().timestamp >= 15000) {
+                        User user = User.getInstance(entry.getKey());
+                        if (user.isOnline()) {
+                            user.sendMessage(getTranslation(user, "clans.commands.clan.transfer.timeout"));
+                        }
+                        return true;
+                    }
+                    return false;
+                });
                 Iterator<Map.Entry<UUID, Long>> penitenceIterator = penitenceExpirations.entrySet().iterator();
                 while (penitenceIterator.hasNext()) {
                     Map.Entry<UUID, Long> entry = penitenceIterator.next();
@@ -296,14 +312,14 @@ public class Clans extends Addon implements Listener {
                     }
                 }
             }
-        }.runTaskTimer(getPlugin(), 0L, 20L); // Ejecutar cada segundo (20 ticks)
+        }.runTaskTimer(getPlugin(), 0L, 20L);
     }
 
     private void loadPenitences() {
         penitenceDatabase = new world.bentobox.bentobox.database.Database<>(this, PenitenceData.class);
         List<PenitenceData> penitenceDataList = penitenceDatabase.loadObjects();
         long currentTime = System.currentTimeMillis();
-        penitenceExpirations.clear(); // Limpiar el mapa antes de cargar
+        penitenceExpirations.clear();
         for (PenitenceData data : penitenceDataList) {
             if (data.getExpirationTime() > currentTime) {
                 penitenceExpirations.put(UUID.fromString(data.getUniqueId()), data.getExpirationTime());
@@ -351,7 +367,6 @@ public class Clans extends Addon implements Listener {
             }
             return false;
         }
-        // Enviar mensaje solo si sendMessage es true
         if (sendMessage) {
             if (requester != null && !requester.getUniqueId().equals(playerUUID)) {
                 requester.sendMessage(getTranslation(requester, "clans.commands.clan.penitence.blocked-third-party",
@@ -365,7 +380,6 @@ public class Clans extends Addon implements Listener {
         return true;
     }
 
-    // Sobrecarga para mantener compatibilidad con las llamadas existentes
     public boolean isUnderPenitence(User user) {
         return isUnderPenitence(user, null, true);
     }
@@ -383,7 +397,7 @@ public class Clans extends Addon implements Listener {
             return 0;
         }
         long currentTime = System.currentTimeMillis();
-        return Math.max(0, (expiration - currentTime) / 1000); // Segundos restantes
+        return Math.max(0, (expiration - currentTime) / 1000);
     }
 
     public void clearPenitence(User user) {

@@ -159,7 +159,7 @@ public class ClanManager {
                         LegacyComponentSerializer.legacyAmpersand().deserialize(tag.replace("&&", "&"))
                 );
                 clan.setTag(formattedTag);
-                clan.setLastTagChangeTimestamp(System.currentTimeMillis()); // Actualizar timestamp
+                clan.setLastTagChangeTimestamp(System.currentTimeMillis());
                 database.saveObject(new ClanData(uniqueId, clan.getCleanName(), clan.getDisplayName(), formattedTag, clan.getOwnerUUID(),
                         clan.getRanks(), clan.getMaxCoLeaders(), clan.getMaxCommanders(), clan.getMaxMembers(),
                         new ArrayList<>(clan.getBannedPlayers()), clan.getLastTagChangeTimestamp()));
@@ -239,13 +239,13 @@ public class ClanManager {
         private String cleanName;
         private String displayName;
         private String tag;
-        private final String ownerUUID;
+        private String ownerUUID;
         private final Map<String, Integer> ranks;
         private final int maxCoLeaders;
         private final int maxCommanders;
         private final int maxMembers;
         private final Set<String> bannedPlayers;
-        private long lastTagChangeTimestamp; // Nuevo campo
+        private long lastTagChangeTimestamp;
 
         public enum Rank {
             LEADER(3),
@@ -321,6 +321,11 @@ public class ClanManager {
 
         public String getOwnerUUID() {
             return ownerUUID;
+        }
+
+        public void setOwnerUUID(String ownerUUID) {
+            this.ownerUUID = ownerUUID;
+            save();
         }
 
         public Map<String, Integer> getRanks() {
@@ -404,7 +409,7 @@ public class ClanManager {
             save();
         }
 
-        private void save() {
+        public void save() {
             ClanData data = new ClanData(
                     uniqueId, cleanName, displayName, tag, ownerUUID, new HashMap<>(ranks),
                     maxCoLeaders, maxCommanders, maxMembers, new ArrayList<>(bannedPlayers), lastTagChangeTimestamp

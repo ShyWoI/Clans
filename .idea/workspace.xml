@@ -9,22 +9,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7255f22-bfd4-4b93-8171-730851024a62" name="Changes" comment="Test">
+    <list default="true" id="a7255f22-bfd4-4b93-8171-730851024a62" name="Changes" comment="Update correctly">
+      <change afterPath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/commands/ClanTransferCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/Clans_jar/Clans.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/Clans_jar/Clans.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$BanRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$BanRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$CreateRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$CreateRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$DisbandRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$DisbandRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$KickRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$KickRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$LeaveRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$LeaveRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$TagRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$TagRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/Clans.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/Clans.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/managers/ClanManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/managers/ClanManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/locales/es-ES.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/locales/es-ES.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -45,6 +47,9 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="2vyZIKDeEbgSpk1Yv0Ub2GF4dIW" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -69,6 +74,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean package" />
+    </option>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -84,7 +94,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1745119194232</updated>
-      <workItem from="1745119195325" duration="2007000" />
+      <workItem from="1745119195325" duration="3838000" />
     </task>
     <task id="LOCAL-00001" summary="Test">
       <option name="closed" value="true" />
@@ -102,7 +112,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745120283659</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Update correctly">
+      <option name="closed" value="true" />
+      <created>1745121233656</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1745121233656</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -121,6 +139,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Test" />
-    <option name="LAST_COMMIT_MESSAGE" value="Test" />
+    <MESSAGE value="Update correctly" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update correctly" />
   </component>
 </project>

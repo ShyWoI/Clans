@@ -34,6 +34,7 @@ public class ClanCommand extends CompositeCommand {
         new ClanKickCommand(clans, this);
         new ClanBanCommand(clans, this);
         new ClanRankCommand(clans, this);
+        new ClanTransferCommand(clans, this);
     }
 
     @Override

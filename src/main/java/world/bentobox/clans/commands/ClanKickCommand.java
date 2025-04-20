@@ -26,18 +26,13 @@ public class ClanKickCommand extends CompositeCommand {
     public ClanKickCommand(Clans addon, CompositeCommand parent) {
         super(addon, parent, "kick");
         this.clans = addon;
-        Bukkit.getScheduler().runTask(addon.getPlugin(), this::configure);
     }
 
     @Override
     public void setup() {
         setPermission("clans.kick");
+        setParametersHelp("clans.commands.clan.kick.parameters");
         setDescription("clans.commands.clan.kick.description");
-        setUsage("<jugador>");
-    }
-
-    private void configure() {
-        setDescription(clans.getTranslation(null, "clans.commands.clan.kick.description"));
     }
 
     @Override
@@ -112,7 +107,7 @@ public class ClanKickCommand extends CompositeCommand {
         // Verificar si el jugador objetivo está bajo penitencia
         User targetUser = User.getInstance(targetPlayer.getUniqueId());
         if (clans.isUnderPenitence(targetUser)) {
-            user.sendMessage(clans.getTranslation(user, "clans.commands.clan.penitence.blocked",
+            user.sendMessage(clans.getTranslation(user, "clans.commands.clan.kick.blocked-by-penitence",
                     "[player]", targetName,
                     "[time]", clans.formatTime(clans.getPenitenceRemainingTime(targetUser))));
             return false;
@@ -121,6 +116,15 @@ public class ClanKickCommand extends CompositeCommand {
         // Verificar si ya hay una solicitud pendiente
         Clans.KickRequest existingRequest = clans.kickRequests.get(userId);
         if (existingRequest != null) {
+            // Verificar si la solicitud ha expirado
+            long kickTimeout = 120_000; // 2 minutos
+            if (System.currentTimeMillis() - existingRequest.timestamp > kickTimeout) {
+                clans.kickRequests.remove(userId);
+                user.sendMessage(clans.getTranslation(user, "clans.commands.clan.kick.timeout"));
+                sendKickConfirmation(user, clan.getDisplayName(), targetName);
+                return true;
+            }
+
             // Confirmar si el comando coincide con la solicitud
             if (args.getFirst().equalsIgnoreCase(existingRequest.targetName)) {
                 clans.kickRequests.remove(userId);
@@ -131,6 +135,7 @@ public class ClanKickCommand extends CompositeCommand {
                 // Iniciar penitencia para el jugador expulsado
                 clans.startPenitence(targetUser);
                 // Reproducir sonido de confirmación
+                user.getPlayer();
                 user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
                 // Notificar al ejecutor
                 user.sendMessage(clans.getTranslation(user, "clans.commands.clan.kick.success",
@@ -163,6 +168,7 @@ public class ClanKickCommand extends CompositeCommand {
         String command = "/clan kick " + targetName;
 
         // Reproducir sonido de pregunta tensa
+        user.getPlayer();
         user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 0.5f);
 
         // Cargar mensajes desde es-ES.yml
@@ -196,6 +202,7 @@ public class ClanKickCommand extends CompositeCommand {
                         .hoverEvent(HoverEvent.showText(Component.text(rejectTooltip, NamedTextColor.GRAY))))
                 .append(Component.newline());
 
+        user.getPlayer();
         user.getPlayer().sendMessage(message);
 
         // Almacenar solicitud

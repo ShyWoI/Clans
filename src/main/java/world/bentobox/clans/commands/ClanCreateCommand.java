@@ -6,9 +6,9 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.clans.Clans;
@@ -24,19 +24,13 @@ public class ClanCreateCommand extends CompositeCommand {
     public ClanCreateCommand(Clans addon, CompositeCommand parent) {
         super(addon, parent, "create");
         this.clans = addon;
-        Bukkit.getScheduler().runTask(addon.getPlugin(), this::configure);
     }
 
     @Override
     public void setup() {
         setPermission("clans.create");
+        setParametersHelp("clans.commands.clan.create.parameters");
         setDescription("clans.commands.clan.create.description");
-        setUsage("<nombre> [tag]");
-    }
-
-    private void configure() {
-        setDescription(clans.getTranslation(null, "clans.commands.clan.create.description"));
-        setUsage("<nombre> [tag]");
     }
 
     @Override
@@ -45,6 +39,7 @@ public class ClanCreateCommand extends CompositeCommand {
         UUID userId = user.getUniqueId();
 
         // Verificar si el jugador está bajo penitencia
+        // isUnderPenitence muestra un mensaje al usuario si está bajo penitencia y retorna true
         if (clans.isUnderPenitence(user, null, true)) {
             return false;
         }
@@ -56,7 +51,7 @@ public class ClanCreateCommand extends CompositeCommand {
         }
 
         if (args.isEmpty()) {
-            String commandLabel = "/" + getTopLabel();
+            String commandLabel = "/" + getTopLabel(); // Usamos getTopLabel() para obtener la etiqueta del comando (e.g., "clan")
             user.sendMessage(clans.getTranslation(user, "clans.commands.clan.create.usage", "[label]", commandLabel));
             return false;
         }
@@ -174,6 +169,13 @@ public class ClanCreateCommand extends CompositeCommand {
             }
         }
 
+        // Generar tag por defecto si no se proporciona
+        String defaultTag = tag != null ? tag : cleanName.substring(0, Math.min(3, cleanName.length()));
+        if (tag == null && !clans.getClanManager().isValidTag(defaultTag)) {
+            user.sendMessage(clans.getTranslation(user, "clans.commands.clan.tag.invalid"));
+            return false;
+        }
+
         // Enviar mensaje de confirmación
         sendCreateConfirmation(user, displayName, tag);
         return true;
@@ -186,7 +188,8 @@ public class ClanCreateCommand extends CompositeCommand {
         String displayTag = tag != null ? tag : cleanName.substring(0, Math.min(3, cleanName.length()));
 
         // Reproducir sonido de pregunta tensa
-        user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 1.0f);
+        Player player = user.getPlayer();
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 1.0f);
 
         // Cargar mensajes desde es-ES.yml
         YamlConfiguration locale = clans.getLocaleConfig(user);
@@ -222,7 +225,8 @@ public class ClanCreateCommand extends CompositeCommand {
                         .hoverEvent(HoverEvent.showText(LegacyComponentSerializer.legacyAmpersand().deserialize(rejectTooltip))))
                 .append(Component.newline());
 
-        user.getPlayer().sendMessage(message);
+        Player playerForMessage = user.getPlayer();
+        playerForMessage.sendMessage(message);
 
         // Almacenar solicitud
         clans.createRequests.put(userId, new Clans.CreateRequest(displayName, tag, System.currentTimeMillis()));
@@ -230,9 +234,10 @@ public class ClanCreateCommand extends CompositeCommand {
 
     private boolean handleCreateClan(User user, String displayName, String tag) {
         // Formatear el tag con códigos de color correctamente
+        String cleanName = clans.stripColor(displayName);
         String formattedTag = tag != null ? LegacyComponentSerializer.legacyAmpersand().serialize(
                 LegacyComponentSerializer.legacyAmpersand().deserialize(tag.replace("&&", "&"))
-        ) : clans.serializeWithReset(clans.stripColor(displayName).substring(0, Math.min(3, displayName.length())));
+        ) : clans.serializeWithReset(cleanName.substring(0, Math.min(3, cleanName.length())));
         // Formatear el displayName con códigos de color
         String formattedDisplayName = clans.serializeWithReset(displayName);
 
@@ -240,9 +245,11 @@ public class ClanCreateCommand extends CompositeCommand {
         String uniqueId = clans.getClanManager().createClan(formattedDisplayName, formattedTag, playerUUID, clans.getSettings().getMaxCoLeaders(), clans.getSettings().getMaxCommanders(), clans.getSettings().getMaxMembers());
         if (uniqueId != null) {
             if (clans.getEconomy() != null) {
-                clans.getEconomy().withdrawPlayer(user.getPlayer(), clans.getSettings().getCreationCost());
+                Player player = user.getPlayer();
+                clans.getEconomy().withdrawPlayer(player, clans.getSettings().getCreationCost());
             }
-            user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+            Player player = user.getPlayer();
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
             user.sendMessage(clans.getTranslation(user, "clans.commands.clan.create.success",
                     "[name]", formattedDisplayName,
                     "[tag]", formattedTag,

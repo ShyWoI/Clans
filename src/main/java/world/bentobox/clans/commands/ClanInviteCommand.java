@@ -44,26 +44,19 @@ public class ClanInviteCommand extends CompositeCommand {
     public ClanInviteCommand(Clans addon, CompositeCommand parent) {
         super(addon, parent, "invite");
         this.clans = addon;
-        if (addon != null) {
-            Bukkit.getScheduler().runTask(addon.getPlugin(), this::registerSubCommands);
-        } else {
-            getLogger().warning("Advertencia: addon es null en ClanInviteCommand. Los subcomandos no se registrarán.");
-        }
+        registerSubCommands();
     }
 
     @Override
     public void setup() {
-        setPermission("clans.invite");
-        setDescription("Invite a player to your clan");
-        setUsage("[player]");
+        setPermission("clans.invite.decline");
+        setParametersHelp("clans.commands.clan.invite.decline.parameters");
+        setDescription("clans.commands.clan.invite.decline.description");
     }
 
     private void registerSubCommands() {
         new ClanInviteAcceptCommand(clans, this);
         new ClanInviteDeclineCommand(clans, this);
-        if (clans != null) {
-            setDescription(clans.getTranslation(null, "clans.commands.clan.invite.description"));
-        }
     }
 
     @Override
@@ -101,12 +94,12 @@ public class ClanInviteCommand extends CompositeCommand {
             String targetName = args.getFirst();
             Player targetPlayer = Bukkit.getPlayer(targetName);
             if (targetPlayer == null || !targetPlayer.isOnline()) {
-                user.sendMessage(clans.getTranslation(user, "clans.errors.player-not-online", "[player]", targetName));
+                user.sendMessage(clans.getTranslation(user, "clans.commands.clan.invite.player-not-found", "[player]", targetName));
                 return false;
             }
             User target = User.getInstance(targetPlayer);
             if (target.getUniqueId().toString().equals(playerUUID)) {
-                user.sendMessage(clans.getTranslation(user, "clans.commands.clan.invite.cannot-invite-self"));
+                user.sendMessage(clans.getTranslation(user, "clans.commands.clan.invite.self-invite"));
                 return false;
             }
             if (target.getUniqueId().toString().equals(clan.getOwnerUUID())) {
@@ -114,15 +107,17 @@ public class ClanInviteCommand extends CompositeCommand {
                 return false;
             }
             if (clans.getClanManager().getClanNameByPlayer(target.getUniqueId().toString()) != null) {
-                user.sendMessage(clans.getTranslation(user, "clans.errors.player-in-clan", "[player]", target.getName()));
+                user.sendMessage(clans.getTranslation(user, "clans.commands.clan.invite.already-in-clan", "[player]", target.getName()));
                 return false;
             }
             if (clan.isBanned(target.getUniqueId().toString())) {
                 user.sendMessage(clans.getTranslation(user, "clans.commands.clan.invite.player-banned", "[player]", target.getName()));
                 return false;
             }
+            // Verificar penitencia
+            // isUnderPenitence muestra un mensaje al usuario si está bajo penitencia y retorna true
             if (clans.isUnderPenitence(target, user, true)) {
-                return false; // El mensaje ya se envía dentro de isUnderPenitence
+                return false;
             }
             sendInviteConfirmation(user, target, clanName);
             return true;
@@ -131,7 +126,7 @@ public class ClanInviteCommand extends CompositeCommand {
         // Cargar el archivo de configuración del panel
         File panelFile = new File(getAddon().getDataFolder(), "panels/clan_invite.yml");
         if (!panelFile.exists()) {
-            user.sendMessage(clans.getTranslation(user, "clans.commands.clan.list.error-panel"));
+            user.sendMessage(clans.getTranslation(user, "clans.commands.clan.invite.error-panel"));
             return false;
         }
 
@@ -239,7 +234,8 @@ public class ClanInviteCommand extends CompositeCommand {
                     .description(description)
                     .clickHandler((clickedPanel, panelUser, clickType, slotNum) -> {
                         if (clickType.equals(ClickType.LEFT)) {
-                            panelUser.getPlayer().playSound(panelUser.getPlayer().getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                            Player player = panelUser.getPlayer();
+                            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
                             sendInviteConfirmation(panelUser, target, clanName);
                             panelUser.closeInventory();
                             return true;
@@ -290,7 +286,8 @@ public class ClanInviteCommand extends CompositeCommand {
                 .description(clans.getTranslationList(user, "clans.panels.clan_invite.buttons.back.description"))
                 .clickHandler((clickedPanel, panelUser, clickType, slot) -> {
                     if (clickType.equals(ClickType.LEFT)) {
-                        panelUser.getPlayer().playSound(panelUser.getPlayer().getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                        Player player = panelUser.getPlayer();
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
                         panelUser.closeInventory();
                         return true;
                     }
@@ -306,8 +303,17 @@ public class ClanInviteCommand extends CompositeCommand {
         UUID inviterId = inviter.getUniqueId();
         UUID targetId = target.getUniqueId();
 
-        inviter.getPlayer().playSound(inviter.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 0.5f);
-        target.getPlayer().playSound(target.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 0.5f);
+        // Verificar si ya existe una invitación pendiente para este jugador
+        List<InviteRequest> targetInvites = inviteRequests.computeIfAbsent(targetId, k -> new ArrayList<>());
+        if (targetInvites.stream().anyMatch(req -> req.clanName.equalsIgnoreCase(clanName))) {
+            inviter.sendMessage(clans.getTranslation(inviter, "clans.commands.clan.invite.pending", "[player]", target.getName()));
+            return;
+        }
+
+        Player inviterPlayer = inviter.getPlayer();
+        Player targetPlayer = target.getPlayer();
+        inviterPlayer.playSound(inviterPlayer.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 0.5f);
+        targetPlayer.playSound(targetPlayer.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 0.5f);
 
         YamlConfiguration locale = clans.getLocaleConfig(inviter);
         String inviterMessageTemplate = locale.getString("clans.commands.clan.invite.inviter-message",
@@ -346,10 +352,9 @@ public class ClanInviteCommand extends CompositeCommand {
                         .hoverEvent(HoverEvent.showText(LegacyComponentSerializer.legacyAmpersand().deserialize(rejectTooltip))))
                 .append(Component.newline());
 
-        inviter.getPlayer().sendMessage(inviterMessage);
-        target.getPlayer().sendMessage(targetMessage);
+        inviterPlayer.sendMessage(inviterMessage);
+        targetPlayer.sendMessage(targetMessage);
 
-        List<InviteRequest> targetInvites = inviteRequests.computeIfAbsent(targetId, k -> new ArrayList<>());
         targetInvites.add(new InviteRequest(clanName, inviterId, System.currentTimeMillis()));
     }
 
@@ -420,14 +425,16 @@ public class ClanInviteCommand extends CompositeCommand {
         @Override
         public void setup() {
             setPermission("clans.invite.accept");
-            setDescription("Accept a clan invitation");
-            setUsage("<clan>");
+            setDescription("Temporal description");
+            setUsage("Temporal usage");
+            if (clans != null) {
+                setDescription(clans.getTranslation(null, "clans.commands.clan.invite accept.description"));
+                setUsage(clans.getTranslation(null, "clans.commands.clan.invite.accept.usage", "[label]", "/" + getTopLabel()));
+            }
         }
 
         private void configure() {
-            if (clans != null) {
-                setDescription(clans.getTranslation(null, "clans.commands.clan.invite.accept.description"));
-            }
+            // Configuración ya manejada en setup
         }
 
         @Override
@@ -483,7 +490,8 @@ public class ClanInviteCommand extends CompositeCommand {
             clans.getClanManager().addMember(clan.getUniqueId(), playerUUID, ClanManager.Clan.Rank.MEMBER)
                     .thenAccept(success -> {
                         if (success) {
-                            user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+                            Player player = user.getPlayer();
+                            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
                             user.sendMessage(clans.getTranslation(user, "clans.commands.clan.invite.accept-success", "[name]", clanName));
                             clan.getRanks().keySet().stream()
                                     .map(uuid -> User.getInstance(UUID.fromString(uuid)))
@@ -524,14 +532,16 @@ public class ClanInviteCommand extends CompositeCommand {
         @Override
         public void setup() {
             setPermission("clans.invite.decline");
-            setDescription("Decline a clan invitation");
-            setUsage("<clan>");
+            setDescription("Temporal description");
+            setUsage("Temporal usage");
+            if (clans != null) {
+                setDescription(clans.getTranslation(null, "clans.commands.clan.invite.decline.description"));
+                setUsage(clans.getTranslation(null, "clans.commands.clan.invite.decline.usage", "[label]", "/" + getTopLabel()));
+            }
         }
 
         private void configure() {
-            if (clans != null) {
-                setDescription(clans.getTranslation(null, "clans.commands.clan.invite.decline.description"));
-            }
+            // Configuración ya manejada en setup
         }
 
         @Override
@@ -571,7 +581,8 @@ public class ClanInviteCommand extends CompositeCommand {
             invites.remove(request);
             if (invites.isEmpty()) inviteRequests.remove(userId);
 
-            user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.ITEM_SHIELD_BREAK, 0.5f, 1.0f);
+            Player player = user.getPlayer();
+            player.playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK, 0.5f, 1.0f);
             user.sendMessage(clans.getTranslation(user, "clans.commands.clan.invite.decline-success", "[name]", clanName));
             User inviter = User.getInstance(request.inviterId);
             inviter.sendMessage(clans.getTranslation(inviter, "clans.commands.clan.invite.decline-notify",

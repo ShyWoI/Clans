@@ -6,9 +6,9 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.clans.Clans;
@@ -25,20 +25,15 @@ public class ClanDisbandCommand extends CompositeCommand {
     public ClanDisbandCommand(Clans addon, CompositeCommand parent) {
         super(addon, parent, "disband");
         this.clans = addon;
-        Bukkit.getScheduler().runTask(addon.getPlugin(), this::configure);
     }
 
     @Override
     public void setup() {
         setPermission("clans.disband");
+        setParametersHelp("clans.commands.clan.disband.parameters");
         setDescription("clans.commands.clan.disband.description");
-        setUsage("");
     }
 
-    private void configure() {
-        setDescription(clans.getTranslation(null, "clans.commands.clan.disband.description"));
-        setUsage("<nombre> [tag]");
-    }
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
@@ -56,6 +51,7 @@ public class ClanDisbandCommand extends CompositeCommand {
         }
 
         // Verificar si el líder está bajo penitencia
+        // isUnderPenitence muestra un mensaje al usuario si está bajo penitencia y retorna true
         if (clans.isUnderPenitence(user, null, true)) {
             return false;
         }
@@ -84,7 +80,8 @@ public class ClanDisbandCommand extends CompositeCommand {
                     if (success) {
                         // Reembolsar al líder si está configurado
                         if (clans.getEconomy() != null && clans.getSettings().getDisbandRefunded() > 0) {
-                            clans.getEconomy().depositPlayer(user.getPlayer(), clans.getSettings().getDisbandRefunded());
+                            Player player = user.getPlayer();
+                            clans.getEconomy().depositPlayer(player, clans.getSettings().getDisbandRefunded());
                         }
 
                         // Aplicar penitencia a todos los miembros del clan
@@ -94,10 +91,12 @@ public class ClanDisbandCommand extends CompositeCommand {
                         });
 
                         // Reproducir sonido de confirmación
-                        user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.ITEM_SHIELD_BREAK, 0.5f, 1.0f);
+                        Player player = user.getPlayer();
+                        player.playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK, 0.5f, 1.0f);
                         // Notificar al líder
                         user.sendMessage(clans.getTranslation(user, "clans.commands.clan.disband.success"));
                         // Notificar a los demás miembros
+                        // User.getInstance maneja usuarios fuera de línea si es necesario
                         clan.getRanks().keySet().stream()
                                 .map(uuid -> User.getInstance(UUID.fromString(uuid)))
                                 .filter(u -> !u.getUniqueId().equals(userId))
@@ -124,7 +123,8 @@ public class ClanDisbandCommand extends CompositeCommand {
         String command = "/clan disband " + clanName;
 
         // Reproducir sonido de pregunta tensa
-        user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 0.5f);
+        Player player = user.getPlayer();
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 0.5f);
 
         // Cargar mensajes desde es-ES.yml
         YamlConfiguration locale = clans.getLocaleConfig(user);
@@ -157,7 +157,8 @@ public class ClanDisbandCommand extends CompositeCommand {
                         .hoverEvent(HoverEvent.showText(LegacyComponentSerializer.legacyAmpersand().deserialize(rejectTooltip))))
                 .append(Component.newline());
 
-        user.getPlayer().sendMessage(message);
+        Player playerForMessage = user.getPlayer();
+        playerForMessage.sendMessage(message);
 
         // Almacenar solicitud
         clans.disbandRequests.put(userId, new Clans.DisbandRequest(clanName, System.currentTimeMillis()));

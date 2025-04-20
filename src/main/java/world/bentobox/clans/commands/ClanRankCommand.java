@@ -26,8 +26,12 @@ public class ClanRankCommand extends CompositeCommand {
     @Override
     public void setup() {
         setPermission("clans.rank");
+        setParametersHelp("clans.commands.clan.rank.parameters");
         setDescription("clans.commands.clan.rank.description");
-        setUsage("<promote|demote> <jugador>");
+        if (clans != null) {
+            new PromoteSubCommand(clans, this);
+            new DemoteSubCommand(clans, this);
+        }
     }
 
     @Override
@@ -39,18 +43,22 @@ public class ClanRankCommand extends CompositeCommand {
     private class PromoteSubCommand extends CompositeCommand {
         public PromoteSubCommand(Clans addon, CompositeCommand parent) {
             super(addon, parent, "promote");
-            Bukkit.getScheduler().runTask(addon.getPlugin(), this::configure);
+            if (addon != null) {
+                Bukkit.getScheduler().runTask(addon.getPlugin(), this::configure);
+            } else {
+                getLogger().warning("Advertencia: addon es null en PromoteSubCommand. La configuración no se ejecutará.");
+            }
         }
 
         @Override
         public void setup() {
             setPermission("clans.promote");
+            setParametersHelp("clans.commands.clan.promote.parameters");
             setDescription("clans.commands.clan.promote.description");
-            setUsage("<jugador>");
         }
 
         private void configure() {
-            setDescription(clans.getTranslation(null, "clans.commands.clan.promote.description"));
+            // Configuración ya manejada en setup
         }
 
         @Override
@@ -128,9 +136,11 @@ public class ClanRankCommand extends CompositeCommand {
             clan.setRank(targetUUID, newRank);
             clans.getClanManager().saveClans();
 
+            user.getPlayer();
             user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
             User targetUser = User.getInstance(targetPlayer.getUniqueId());
             if (targetUser.isOnline()) {
+                targetUser.getPlayer();
                 targetUser.getPlayer().playSound(targetUser.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
             }
 
@@ -189,18 +199,13 @@ public class ClanRankCommand extends CompositeCommand {
     private class DemoteSubCommand extends CompositeCommand {
         public DemoteSubCommand(Clans addon, CompositeCommand parent) {
             super(addon, parent, "demote");
-            Bukkit.getScheduler().runTask(addon.getPlugin(), this::configure);
         }
 
         @Override
         public void setup() {
             setPermission("clans.demote");
+            setParametersHelp("clans.commands.clan.demote.parameters");
             setDescription("clans.commands.clan.demote.description");
-            setUsage("<jugador>");
-        }
-
-        private void configure() {
-            setDescription(clans.getTranslation(null, "clans.commands.clan.demote.description"));
         }
 
         @Override
@@ -266,17 +271,19 @@ public class ClanRankCommand extends CompositeCommand {
             clan.setRank(targetUUID, newRank);
             clans.getClanManager().saveClans();
 
-            user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+            user.getPlayer();
+            user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1.0f);
             User targetUser = User.getInstance(targetPlayer.getUniqueId());
             if (targetUser.isOnline()) {
-                targetUser.getPlayer().playSound(targetUser.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+                targetUser.getPlayer();
+                targetUser.getPlayer().playSound(targetUser.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1.0f);
             }
 
             user.sendMessage(clans.getTranslation(user, "clans.commands.clan.demote.success",
                     "[player]", targetName, "[rank]", rankName, "[clan]", clan.getDisplayName()));
 
             if (targetUser.isOnline()) {
-                user.sendMessage(clans.getTranslation(user, "clans.commands.clan.demote.notify",
+                targetUser.sendMessage(clans.getTranslation(targetUser, "clans.commands.clan.demote.notify",
                         "[rank]", rankName, "[clan]", clan.getDisplayName()));
             }
 

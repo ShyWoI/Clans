@@ -64,7 +64,7 @@ public class Clans extends Addon implements Listener {
 
     public static class LeaveRequest {
         public final String clanName;
-        final long timestamp;
+        public final long timestamp;
 
         public LeaveRequest(String clanName, long timestamp) {
             this.clanName = clanName;
@@ -75,7 +75,7 @@ public class Clans extends Addon implements Listener {
     public static class KickRequest {
         final String clanName;
         public final String targetName;
-        final long timestamp;
+        public final long timestamp;
 
         public KickRequest(String clanName, String targetName, long timestamp) {
             this.clanName = clanName;

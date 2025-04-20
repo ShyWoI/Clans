@@ -1,6 +1,5 @@
 package world.bentobox.clans.commands;
 
-import org.bukkit.Bukkit;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.clans.Clans;
@@ -13,23 +12,18 @@ public class ClanInfoCommand extends CompositeCommand {
     public ClanInfoCommand(Clans addon, CompositeCommand parent) {
         super(addon, parent, "info");
         this.clans = addon;
-        Bukkit.getScheduler().runTask(addon.getPlugin(), this::configure);
     }
 
     @Override
     public void setup() {
         setPermission("clans.info");
+        setParametersHelp("clans.commands.clan.info.parameters");
         setDescription("clans.commands.clan.info.description");
-        setUsage("");
-    }
-
-    private void configure() {
-        setDescription(clans.getTranslation(null, "clans.commands.clan.info.description"));
-        setUsage("<nombre> [tag]");
     }
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
+        // Separamos la validación para mantener claridad en la lógica de ejecución
         if (!args.isEmpty()) {
             user.sendMessage(clans.getTranslation(user, "clans.commands.clan.info.usage"));
             return false;

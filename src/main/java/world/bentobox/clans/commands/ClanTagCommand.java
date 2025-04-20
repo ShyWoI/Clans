@@ -6,7 +6,6 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
@@ -21,23 +20,18 @@ import java.util.stream.Collectors;
 
 public class ClanTagCommand extends CompositeCommand {
     private final Clans clans;
+    private static final long REQUEST_TIMEOUT = 30 * 1000; // 30 segundos
 
     public ClanTagCommand(Clans addon, CompositeCommand parent) {
         super(addon, parent, "tag");
         this.clans = addon;
-        Bukkit.getScheduler().runTask(addon.getPlugin(), this::configure);
     }
 
     @Override
     public void setup() {
         setPermission("clans.tag");
+        setParametersHelp("clans.commands.clan.tag.parameters");
         setDescription("clans.commands.clan.tag.description");
-        setUsage("<tag>");
-    }
-
-    private void configure() {
-        setDescription(clans.getTranslation(null, "clans.commands.clan.tag.description"));
-        setUsage("<tag>");
     }
 
     @Override
@@ -100,6 +94,12 @@ public class ClanTagCommand extends CompositeCommand {
                 user.sendMessage(clans.getTranslation(user, "clans.commands.clan.tag.no-pending"));
                 return false;
             }
+            // Verificar timeout
+            if (currentTime - request.timestamp > REQUEST_TIMEOUT) {
+                clans.tagRequests.remove(userId);
+                user.sendMessage(clans.getTranslation(user, "clans.commands.clan.tag.timeout"));
+                return false;
+            }
             clans.tagRequests.remove(userId);
             handleSetTag(user, request.newTag);
             return true;
@@ -136,6 +136,7 @@ public class ClanTagCommand extends CompositeCommand {
         String displayTag = clans.serializeWithReset(newTag.replace("&&", "&"));
 
         // Reproducir sonido de pregunta tensa
+        user.getPlayer();
         user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 1.0f);
 
         // Cargar mensajes desde es-ES.yml
@@ -188,6 +189,7 @@ public class ClanTagCommand extends CompositeCommand {
 
             String formattedTag = clans.serializeWithReset(tag.replace("&&", "&"));
             clans.getClanManager().setClanTag(clan.getUniqueId(), tag).thenAccept(success -> {
+                user.getPlayer();
                 if (success) {
                     user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
                     user.sendMessage(clans.getTranslation(user, "clans.commands.clan.tag.success",
@@ -196,6 +198,9 @@ public class ClanTagCommand extends CompositeCommand {
                 } else {
                     user.sendMessage(clans.getTranslation(user, "clans.commands.clan.tag.taken", "[tag]", formattedTag));
                 }
+            }).exceptionally(throwable -> {
+                user.sendMessage(clans.getTranslation(user, "clans.commands.clan.tag.error"));
+                return null;
             });
         });
     }

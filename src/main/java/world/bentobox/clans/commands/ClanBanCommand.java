@@ -28,62 +28,51 @@ public class ClanBanCommand extends CompositeCommand {
     public ClanBanCommand(Clans addon, CompositeCommand parent) {
         super(addon, parent, "ban", "unban", "banlist");
         this.clans = addon;
-        Bukkit.getScheduler().runTask(addon.getPlugin(), this::configure);
     }
 
     @Override
     public void setup() {
         setPermission("clans.ban");
+        setParametersHelp("clans.commands.clan.ban.parameters");
         setDescription("clans.commands.clan.ban.description");
-        setUsage("<jugador>");
+
         getSubCommand("unban").ifPresent(sub -> {
             sub.setPermission("clans.unban");
+            sub.setParametersHelp("clans.commands.clan.unban.parameters");
             sub.setDescription("clans.commands.clan.unban.description");
-            sub.setUsage("<jugador>");
         });
+
         getSubCommand("banlist").ifPresent(sub -> {
             sub.setPermission("clans.banlist");
+            sub.setParametersHelp("clans.commands.clan.banlist.parameters");
             sub.setDescription("clans.commands.clan.banlist.description");
-            sub.setUsage("");
         });
-    }
-
-    private void configure() {
-        setDescription(clans.getTranslation(null, "clans.commands.clan.ban.description"));
-        getSubCommand("unban").ifPresent(sub ->
-                sub.setDescription(clans.getTranslation(null, "clans.commands.clan.unban.description"))
-        );
-        getSubCommand("banlist").ifPresent(sub ->
-                sub.setDescription(clans.getTranslation(null, "clans.commands.clan.banlist.description"))
-        );
     }
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        String command = label.toLowerCase();
+        String subCommand = String.valueOf(getSubCommand(label));
         String playerUUID = user.getUniqueId().toString();
         UUID userId = user.getUniqueId();
 
-        Optional<ClanManager.Clan> clanOpt = clans.getClanManager().getClanByPlayer(playerUUID);
-        if (clanOpt.isEmpty()) {
+        ClanManager.Clan clan = clans.getClanManager().getClanByPlayer(playerUUID).orElse(null);
+        if (clan == null) {
             user.sendMessage(clans.getTranslation(user, "clans.errors.not-in-clan"));
             return false;
         }
-
-        ClanManager.Clan clan = clanOpt.get();
 
         int executorRankValue = clan.getRanks().getOrDefault(playerUUID, ClanManager.Clan.Rank.MEMBER.getValue());
         ClanManager.Clan.Rank executorRank = getRankFromValue(executorRankValue);
 
         if (executorRank != ClanManager.Clan.Rank.LEADER && executorRank != ClanManager.Clan.Rank.CO_LEADER) {
             user.sendMessage(clans.getTranslation(user,
-                    command.equals("unban") ? "clans.commands.clan.unban.no-permission" :
-                            command.equals("banlist") ? "clans.commands.clan.banlist.no-permission" :
+                    subCommand.equals("unban") ? "clans.commands.clan.unban.no-permission" :
+                            subCommand.equals("banlist") ? "clans.commands.clan.banlist.no-permission" :
                                     "clans.commands.clan.ban.no-permission"));
             return false;
         }
 
-        return switch (command) {
+        return switch (subCommand) {
             case "ban" -> handleBan(user, clan, args, userId, executorRank);
             case "unban" -> handleUnban(user, clan, args);
             case "banlist" -> handleBanList(user, clan, args);
@@ -145,11 +134,15 @@ public class ClanBanCommand extends CompositeCommand {
                 }
                 clan.banPlayer(targetUUID);
                 clans.getClanManager().saveClans();
-                clans.startPenitence(User.getInstance(targetPlayer.getUniqueId()));
-                user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+                User targetUser = User.getInstance(targetPlayer.getUniqueId());
+                boolean penitenceStarted = clans.getPenitenceRemainingTime(targetUser) == 0;
+                if (penitenceStarted) {
+                    clans.startPenitence(targetUser);
+                }
+                Player player = user.getPlayer();
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
                 user.sendMessage(clans.getTranslation(user, "clans.commands.clan.ban.success",
                         "[player]", targetName, "[clan]", clan.getDisplayName()));
-                User targetUser = User.getInstance(targetPlayer.getUniqueId());
                 if (targetUser.isOnline()) {
                     targetUser.sendMessage(clans.getTranslation(targetUser, "clans.commands.clan.ban.notify",
                             "[clan]", clan.getDisplayName()));
@@ -160,6 +153,10 @@ public class ClanBanCommand extends CompositeCommand {
                             .filter(u -> !u.getUniqueId().equals(userId))
                             .forEach(member -> member.sendMessage(clans.getTranslation(member, "clans.commands.clan.ban.clan-notify",
                                     "[player]", targetName, "[clan]", clan.getDisplayName())));
+                }
+                if (!penitenceStarted) {
+                    user.sendMessage(clans.getTranslation(user, "clans.commands.clan.ban.penitence-already-active",
+                            "[player]", targetName));
                 }
                 return true;
             } else {
@@ -195,7 +192,8 @@ public class ClanBanCommand extends CompositeCommand {
         clan.unbanPlayer(targetUUID);
         clans.getClanManager().saveClans();
 
-        user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+        Player player = user.getPlayer();
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
         user.sendMessage(clans.getTranslation(user, "clans.commands.clan.unban.success",
                 "[player]", targetName, "[clan]", clan.getDisplayName()));
         User targetUser = User.getInstance(targetPlayer.getUniqueId());
@@ -231,7 +229,8 @@ public class ClanBanCommand extends CompositeCommand {
             user.sendMessage(translated);
         }
 
-        user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.5f, 1.0f);
+        Player player = user.getPlayer();
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.5f, 1.0f);
         return true;
     }
 
@@ -239,7 +238,8 @@ public class ClanBanCommand extends CompositeCommand {
         UUID userId = user.getUniqueId();
         String command = "/clan ban " + targetName;
 
-        user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 0.5f);
+        Player player = user.getPlayer();
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 0.5f);
 
         YamlConfiguration locale = clans.getLocaleConfig(user);
         String messageTemplate = locale.getString("clans.commands.clan.ban.confirm-message",
@@ -249,9 +249,10 @@ public class ClanBanCommand extends CompositeCommand {
         String rejectButton = locale.getString("clans.commands.clan.ban.reject-button", "[Rechazar]");
         String rejectTooltip = locale.getString("clans.commands.clan.ban.reject-tooltip", "Cancelar baneo");
 
+        String cleanClanName = clans.stripColor(clanName);
         String messageText = messageTemplate.replace("[player]", targetName).replace("[clan]", clanName);
-        acceptTooltip = acceptTooltip.replace("[player]", targetName).replace("[clan]", clans.stripColor(clanName));
-        rejectTooltip = rejectTooltip.replace("[clan]", clans.stripColor(clanName));
+        acceptTooltip = acceptTooltip.replace("[player]", targetName).replace("[clan]", cleanClanName);
+        rejectTooltip = rejectTooltip.replace("[clan]", cleanClanName);
 
         Component message = Component.empty();
         for (String line : messageText.split("\n")) {
@@ -284,12 +285,11 @@ public class ClanBanCommand extends CompositeCommand {
     @Override
     public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
         String playerUUID = user.getUniqueId().toString();
-        Optional<ClanManager.Clan> clanOpt = clans.getClanManager().getClanByPlayer(playerUUID);
-        if (clanOpt.isEmpty()) {
+        ClanManager.Clan clan = clans.getClanManager().getClanByPlayer(playerUUID).orElse(null);
+        if (clan == null) {
             return Optional.of(List.of());
         }
 
-        ClanManager.Clan clan = clanOpt.get();
         int executorRankValue = clan.getRanks().getOrDefault(playerUUID, ClanManager.Clan.Rank.MEMBER.getValue());
         if (executorRankValue != ClanManager.Clan.Rank.LEADER.getValue() && executorRankValue != ClanManager.Clan.Rank.CO_LEADER.getValue()) {
             return Optional.of(List.of());
@@ -315,7 +315,7 @@ public class ClanBanCommand extends CompositeCommand {
             return Optional.of(List.of());
         }
 
-        String input = args.size() > 1 ? args.get(1).toLowerCase() : "";
+        String input = args.get(1).toLowerCase();
         List<String> suggestions;
         if (subCommand.equals("unban")) {
             suggestions = clan.getBannedPlayers().stream()

@@ -28,19 +28,13 @@ public class ClanListCommand extends CompositeCommand {
     public ClanListCommand(Clans addon, CompositeCommand parent) {
         super(addon, parent, "list");
         this.clans = addon;
-        Bukkit.getScheduler().runTask(addon.getPlugin(), this::configure);
     }
 
     @Override
     public void setup() {
         setPermission("clans.list");
+        setParametersHelp("clans.commands.clan.list.parameters");
         setDescription("clans.commands.clan.list.description");
-        setUsage("");
-    }
-
-    private void configure() {
-        setDescription(clans.getTranslation(null, "clans.commands.clan.list.description"));
-        setUsage("[page]");
     }
 
     @Override
@@ -86,17 +80,28 @@ public class ClanListCommand extends CompositeCommand {
         String backgroundTitle = panelConfig.getString("background.title", "&b&r");
         String borderIcon = panelConfig.getString("border.icon", "BLACK_STAINED_GLASS_PANE");
         String borderTitle = panelConfig.getString("border.title", "&b&r");
+        ItemStack backgroundItem;
+        ItemStack borderItem;
+        try {
+            backgroundItem = new ItemStack(Material.valueOf(backgroundIcon));
+            borderItem = new ItemStack(Material.valueOf(borderIcon));
+        } catch (IllegalArgumentException e) {
+            backgroundItem = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+            borderItem = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+            getLogger().warning("Material inválido en panelConfig: " + e.getMessage());
+        }
+
         for (int row = 1; row <= rowsNeeded; row++) {
             for (int col = 1; col <= 9; col++) {
                 int slot = (row - 1) * 9 + (col - 1);
                 if (row == 1 || row == rowsNeeded || col == 1 || col == 9) {
                     panel.item(slot, new PanelItemBuilder()
-                            .icon(new ItemStack(Material.valueOf(borderIcon)))
+                            .icon(borderItem)
                             .name(borderTitle)
                             .build());
                 } else {
                     panel.item(slot, new PanelItemBuilder()
-                            .icon(new ItemStack(Material.valueOf(backgroundIcon)))
+                            .icon(backgroundItem)
                             .name(backgroundTitle)
                             .build());
                 }
@@ -111,7 +116,12 @@ public class ClanListCommand extends CompositeCommand {
                 ConfigurationSection rowSection = panelConfig.getConfigurationSection(rowKey);
                 if (rowSection != null) {
                     for (String colKey : rowSection.getKeys(false)) {
-                        int col = Integer.parseInt(colKey);
+                        int col;
+                        try {
+                            col = Integer.parseInt(colKey);
+                        } catch (NumberFormatException e) {
+                            continue;
+                        }
                         if (Objects.equals(rowSection.getString(colKey), "clan_button")) {
                             int slot = (row - 1) * 9 + (col - 1);
                             clanSlots.add(new int[]{row, col, slot});
@@ -153,6 +163,7 @@ public class ClanListCommand extends CompositeCommand {
                     .name(clans.getTranslation(user, "clans.panels.clan_list.buttons.clan.name", "[name]", clan.getDisplayName()))
                     .description(description)
                     .clickHandler((clickedPanel, panelUser, clickType, slotNum) -> {
+                        panelUser.getPlayer();
                         panelUser.getPlayer().playSound(panelUser.getPlayer().getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
                         if (clickType.equals(ClickType.LEFT)) {
                             // Clic izquierdo: Mostrar información
@@ -187,7 +198,7 @@ public class ClanListCommand extends CompositeCommand {
         if (startIndex > 0) {
             int finalPage = page;
             panel.item(lastRowSlotBase, new PanelItemBuilder()
-                    .icon(new ItemStack(Material.TIPPED_ARROW))
+                    .icon(new ItemStack(Material.ARROW))
                     .name(clans.getTranslation(user, "clans.panels.clan_list.buttons.previous.name"))
                     .description(clans.getTranslationList(user, "clans.panels.clan_list.buttons.previous.description"))
                     .clickHandler((clickedPanel, panelUser, clickType, slot) -> {
@@ -203,7 +214,7 @@ public class ClanListCommand extends CompositeCommand {
         if (endIndex < clansList.size()) {
             int finalPage1 = page;
             panel.item(lastRowSlotBase + 8, new PanelItemBuilder()
-                    .icon(new ItemStack(Material.TIPPED_ARROW))
+                    .icon(new ItemStack(Material.ARROW))
                     .name(clans.getTranslation(user, "clans.panels.clan_list.buttons.next.name"))
                     .description(clans.getTranslationList(user, "clans.panels.clan_list.buttons.next.description"))
                     .clickHandler((clickedPanel, panelUser, clickType, slot) -> {

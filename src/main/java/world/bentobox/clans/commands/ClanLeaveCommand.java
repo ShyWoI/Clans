@@ -6,7 +6,6 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
@@ -24,18 +23,13 @@ public class ClanLeaveCommand extends CompositeCommand {
     public ClanLeaveCommand(Clans addon, CompositeCommand parent) {
         super(addon, parent, "leave");
         this.clans = addon;
-        Bukkit.getScheduler().runTask(addon.getPlugin(), this::configure);
     }
 
     @Override
     public void setup() {
         setPermission("clans.leave");
+        setParametersHelp("clans.commands.clan.leave.parameters");
         setDescription("clans.commands.clan.leave.description");
-        setUsage("");
-    }
-
-    private void configure() {
-        setDescription(clans.getTranslation(null, "clans.commands.clan.leave.description"));
     }
 
     @Override
@@ -77,6 +71,15 @@ public class ClanLeaveCommand extends CompositeCommand {
         // Verificar si ya hay una solicitud pendiente
         Clans.LeaveRequest existingRequest = clans.leaveRequests.get(userId);
         if (existingRequest != null) {
+            // Verificar si la solicitud ha expirado
+            long leaveTimeout = 120_000; // 2 minutos
+            if (System.currentTimeMillis() - existingRequest.timestamp > leaveTimeout) {
+                clans.leaveRequests.remove(userId);
+                user.sendMessage(clans.getTranslation(user, "clans.commands.clan.leave.timeout"));
+                sendLeaveConfirmation(user, clan.getDisplayName());
+                return true;
+            }
+
             // Confirmar si el comando coincide con la solicitud
             if (!args.isEmpty() && clans.stripColor(args.getFirst()).equalsIgnoreCase(clans.stripColor(existingRequest.clanName))) {
                 clans.leaveRequests.remove(userId);
@@ -87,6 +90,7 @@ public class ClanLeaveCommand extends CompositeCommand {
                 // Iniciar penitencia para el jugador
                 clans.startPenitence(user);
                 // Reproducir sonido de confirmación
+                user.getPlayer();
                 user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
                 // Notificar al jugador
                 user.sendMessage(clans.getTranslation(user, "clans.commands.clan.leave.success", "[name]", clan.getDisplayName()));
@@ -113,6 +117,7 @@ public class ClanLeaveCommand extends CompositeCommand {
         String command = "/clan leave " + clans.stripColor(clanName);
 
         // Reproducir sonido de pregunta tensa
+        user.getPlayer();
         user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 0.5f);
 
         // Cargar mensajes desde es-ES.yml
@@ -146,6 +151,7 @@ public class ClanLeaveCommand extends CompositeCommand {
                         .hoverEvent(HoverEvent.showText(LegacyComponentSerializer.legacyAmpersand().deserialize(rejectTooltip))))
                 .append(Component.newline());
 
+        user.getPlayer();
         user.getPlayer().sendMessage(message);
 
         // Almacenar solicitud

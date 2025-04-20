@@ -13,16 +13,14 @@ public class ClanCommand extends CompositeCommand {
     public ClanCommand(Clans addon) {
         super(addon, "clan");
         this.clans = addon;
-        if (addon != null) {
-            Bukkit.getScheduler().runTask(addon.getPlugin(), this::registerSubCommands);
-        }
+        registerSubCommands();
     }
 
     @Override
     public void setup() {
         setPermission("clans.use");
+        setParametersHelp("clans.commands.clan.parameters");
         setDescription("clans.commands.clan.description");
-        setUsage("/clan <subcomando>");
     }
 
     private void registerSubCommands() {
@@ -37,11 +35,6 @@ public class ClanCommand extends CompositeCommand {
         new ClanKickCommand(clans, this);
         new ClanBanCommand(clans, this);
         new ClanRankCommand(clans, this);
-
-        // Actualizar la descripción con la traducción
-        if (clans != null) {
-            setDescription(clans.getTranslation(null, "clans.commands.clan.description"));
-        }
     }
 
     @Override
@@ -65,7 +58,7 @@ public class ClanCommand extends CompositeCommand {
         String subCommand = args.getFirst().toLowerCase();
         if (getSubCommand(subCommand).isEmpty()) {
             // Asegurarse de que el reemplazo de [label] funcione correctamente
-            String commandLabel = "/" + getTopLabel();
+            String commandLabel = "/" + getTopLabel(); // Usamos getTopLabel() para obtener la etiqueta del comando (e.g., "clan")
             user.sendMessage(clans.getTranslation(user, "clans.commands.clan.unknown-command", "[label]", commandLabel));
             return true;
         }

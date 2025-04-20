@@ -1,0 +1,79 @@
+clan_list:
+  title: clans.gui.titles.clan_list
+  type: INVENTORY
+  background:
+    icon: BLACK_STAINED_GLASS_PANE
+    title: "&b&r"
+  border:
+    icon: BLACK_STAINED_GLASS_PANE
+    title: "&b&r"
+  force-shown: []
+  content:
+    2:
+      2: clan_button
+      3: clan_button
+      4: clan_button
+      5: clan_button
+      6: clan_button
+      7: clan_button
+      8: clan_button
+    3:
+      1:
+        icon: tipped_arrow[potion_contents={custom_color:11546150}]
+        title: clans.gui.buttons.previous.name
+        description: clans.gui.buttons.previous.description
+        data:
+          type: PREVIOUS
+          indexing: true
+          target: CLAN
+        actions:
+          previous:
+            click-type: unknown
+            tooltip: clans.gui.tips.click-to-previous
+      2: clan_button
+      3: clan_button
+      4: clan_button
+      5: clan_button
+      6: clan_button
+      7: clan_button
+      8: clan_button
+      9:
+        icon: tipped_arrow[potion_contents={custom_color:8439583}]
+        title: clans.gui.buttons.next.name
+        description: clans.gui.buttons.next.description
+        data:
+          type: NEXT
+          indexing: true
+          target: CLAN
+        actions:
+          next:
+            click-type: unknown
+            tooltip: clans.gui.tips.click-to-next
+    4:
+      2: clan_button
+      3: clan_button
+      4: clan_button
+      5: clan_button
+      6: clan_button
+      7: clan_button
+      8: clan_button
+    5:
+      2: clan_button
+      3: clan_button
+      4: clan_button
+      5: clan_button
+      6: clan_button
+      7: clan_button
+      8: clan_button
+  reusable:
+    clan_button:
+      icon: PLAYER_HEAD
+      title: clans.gui.buttons.clan.name
+      description: clans.gui.buttons.clan.description
+      data:
+        type: CLAN
+        clan_name: "<name>"
+      actions:
+        show_info:
+          click-type: left
+          tooltip: clans.gui.tips.click-to-view

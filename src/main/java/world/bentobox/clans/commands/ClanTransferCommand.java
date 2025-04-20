@@ -105,7 +105,7 @@ public class ClanTransferCommand extends CompositeCommand {
 
         // Verificar si el objetivo está en el clan
         if (!clan.getRanks().containsKey(targetUUID)) {
-            user.sendMessage(clans.getTranslation(user, "clans.commands.clan.transfer.player-not-in-clan", "[player]", targetName));
+            user.sendMessage(clans.getTranslation(user, "clans.commands.clan.transfer.not-in-clan", "[player]", targetName));
             return false;
         }
 
@@ -185,6 +185,7 @@ public class ClanTransferCommand extends CompositeCommand {
         // Transferir liderazgo
         clan.setRank(user.getUniqueId().toString(), newRank);
         clan.setRank(targetUUID, ClanManager.Clan.Rank.LEADER);
+        clan.setOwnerUUID(targetUUID); // Actualizar el ownerUUID
         clan.save();
 
         // Notificar al líder actual

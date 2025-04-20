@@ -247,7 +247,6 @@ clans:
         pending: "[prefix]&cYa tienes una solicitud de transferencia pendiente. Usa [label] confirm o [label] cancel."
         cancelled: "[prefix]&aSolicitud de transferencia cancelada."
         timeout: "[prefix]&cLa solicitud de transferencia ha expirado."
-        player-not-found: "[prefix]&cJugador no encontrado: [player]"
         player-not-in-clan: "[prefix]&cEl jugador [player] no está en tu clan."
         same-player: "[prefix]&cNo puedes transferir el liderazgo a ti mismo."
         confirm-message: "&e&lConfirma la transferencia de liderazgo:\n&eClan: &6[name]\n&eNuevo Líder: &6[target]\n&eHaz clic para confirmar o cancelar."
@@ -281,6 +280,7 @@ clans:
     insufficient-funds: "[prefix]&cNo tienes suficiente dinero ([amount] requerido)."
     invalid-clan-name: "[prefix]&cNombre inválido. Usa [number]-[max] caracteres alfanuméricos."
     clan-not-found: "[prefix]&cEse clan no existe."
+    player-not-found: "[prefix]&cJugador no encontrado: [player]"
   panels:
     clan_list:
       title: "&e&lClans &8| &0Lista de Clanes"

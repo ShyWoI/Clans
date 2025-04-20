@@ -9,12 +9,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7255f22-bfd4-4b93-8171-730851024a62" name="Changes" comment="Update correctly">
-      <change afterPath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/commands/ClanTransferCommand.java" afterDir="false" />
+    <list default="true" id="a7255f22-bfd4-4b93-8171-730851024a62" name="Changes" comment="New /clan transfer &lt;player&gt; - Change the leader of the clan">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/Clans.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/Clans.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/managers/ClanManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/managers/ClanManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/Clans_jar/Clans.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/Clans_jar/Clans.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/commands/ClanTransferCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/commands/ClanTransferCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/locales/es-ES.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/locales/es-ES.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/locales/es-ES.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/locales/es-ES.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$TagRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans$TagRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/Clans.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/commands/ClanCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/commands/ClanCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/managers/ClanManager$Clan.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/managers/ClanManager$Clan.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +99,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1745119194232</updated>
-      <workItem from="1745119195325" duration="3838000" />
+      <workItem from="1745119195325" duration="4760000" />
     </task>
     <task id="LOCAL-00001" summary="Test">
       <option name="closed" value="true" />
@@ -120,7 +125,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745121233656</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="New /clan transfer &lt;player&gt; - Change the leader of the clan">
+      <option name="closed" value="true" />
+      <created>1745123163466</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1745123163466</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -140,6 +153,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Test" />
     <MESSAGE value="Update correctly" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update correctly" />
+    <MESSAGE value="New /clan transfer &lt;player&gt; - Change the leader of the clan" />
+    <option name="LAST_COMMIT_MESSAGE" value="New /clan transfer &lt;player&gt; - Change the leader of the clan" />
   </component>
 </project>

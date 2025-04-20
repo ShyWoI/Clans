@@ -247,7 +247,6 @@ clans:
         pending: "[prefix]&cYa tienes una solicitud de transferencia pendiente. Usa [label] confirm o [label] cancel."
         cancelled: "[prefix]&aSolicitud de transferencia cancelada."
         timeout: "[prefix]&cLa solicitud de transferencia ha expirado."
-        player-not-found: "[prefix]&cJugador no encontrado: [player]"
         player-not-in-clan: "[prefix]&cEl jugador [player] no está en tu clan."
         same-player: "[prefix]&cNo puedes transferir el liderazgo a ti mismo."
         confirm-message: "&e&lConfirma la transferencia de liderazgo:\n&eClan: &6[name]\n&eNuevo Líder: &6[target]\n&eHaz clic para confirmar o cancelar."
@@ -273,6 +272,17 @@ clans:
             usage: "Uso: [label] penitence clear <jugador>"
             success: "&aLa penitencia de [player] ha sido eliminada."
             player-not-found: "&cEl jugador [player] no fue encontrado."
+        transfer:
+          description: "Transfiere el liderazgo de un clan a otro miembro"
+          parameters: "<clan> <jugador>"
+          usage: "&4Uso: /clanadmin transfer <clan> <jugador>"
+          clan-not-found: "[prefix]&cEl clan [clan] no existe."
+          player-not-found: "[prefix]&cEl jugador [player] no se encontró."
+          not-in-clan: "[prefix]&cEl jugador [player] no está en el clan."
+          already-leader: "[prefix]&cEl jugador [player] ya es el líder del clan."
+          success: "[prefix]&aLiderazgo del clan [clan] transferido a [target]."
+          notify-old-leader: "[prefix]&eEl liderazgo de tu clan [clan] ha sido transferido por [admin]. Ahora eres [new_rank]."
+          notify-new-leader: "[prefix]&aHas sido nombrado líder del clan [clan] por [admin]."
   errors:
     player-only: "[prefix]&cEste comando es solo para jugadores."
     disabled: "[prefix]&cEl sistema de clanes está deshabilitado."
@@ -281,6 +291,7 @@ clans:
     insufficient-funds: "[prefix]&cNo tienes suficiente dinero ([amount] requerido)."
     invalid-clan-name: "[prefix]&cNombre inválido. Usa [number]-[max] caracteres alfanuméricos."
     clan-not-found: "[prefix]&cEse clan no existe."
+    player-not-found: "[prefix]&cJugador no encontrado: [player]"
   panels:
     clan_list:
       title: "&e&lClans &8| &0Lista de Clanes"

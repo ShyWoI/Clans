@@ -6,10 +6,12 @@ import org.bukkit.entity.Player;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.clans.Clans;
+import world.bentobox.clans.managers.ClanManager;
 
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ClanAdminCommand extends CompositeCommand {
@@ -32,6 +34,7 @@ public class ClanAdminCommand extends CompositeCommand {
         // Registrar subcomandos
         new ClanReloadCommand(clans, this);
         new PenitenceCommand(clans, this);
+        new ClanAdminTransferCommand(clans, this); // Nuevo subcomando
     }
 
     @Override
@@ -165,6 +168,135 @@ public class ClanAdminCommand extends CompositeCommand {
                 return Optional.of(Bukkit.getOnlinePlayers().stream()
                         .map(Player::getName)
                         .filter(name -> name.toLowerCase().startsWith(input))
+                        .collect(Collectors.toList()));
+            }
+            return Optional.of(List.of());
+        }
+    }
+
+    public static class ClanAdminTransferCommand extends CompositeCommand {
+        private final Clans clans;
+
+        public ClanAdminTransferCommand(Clans addon, CompositeCommand parent) {
+            super(addon, parent, "transfer");
+            this.clans = addon;
+        }
+
+        @Override
+        public void setup() {
+            setPermission("clans.admin.transfer");
+            setParametersHelp("clans.commands.admin.clan.transfer.parameters");
+            setDescription("clans.commands.admin.clan.transfer.description");
+        }
+
+        @Override
+        public boolean execute(User user, String label, List<String> args) {
+            // Validar argumentos
+            if (args.size() != 2) {
+                user.sendMessage(clans.getTranslation(user, "clans.commands.admin.clan.transfer.usage"));
+                return false;
+            }
+
+            // Obtener el clan
+            String clanName = args.get(0);
+            ClanManager.Clan clan = clans.getClanManager().getClanByName(clanName).orElse(null);
+            if (clan == null) {
+                user.sendMessage(clans.getTranslation(user, "clans.commands.admin.clan.transfer.clan-not-found", "[clan]", clanName));
+                return false;
+            }
+
+            // Obtener el jugador objetivo
+            String targetName = args.get(1);
+            OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(targetName);
+            if (targetPlayer == null || !targetPlayer.hasPlayedBefore()) {
+                user.sendMessage(clans.getTranslation(user, "clans.commands.admin.clan.transfer.player-not-found", "[player]", targetName));
+                return false;
+            }
+            String targetUUID = targetPlayer.getUniqueId().toString();
+
+            // Verificar si el objetivo está en el clan
+            if (!clan.getRanks().containsKey(targetUUID)) {
+                user.sendMessage(clans.getTranslation(user, "clans.commands.admin.clan.transfer.not-in-clan", "[player]", targetName));
+                return false;
+            }
+
+            // Verificar si el objetivo ya es el líder
+            if (clan.getOwnerUUID().equals(targetUUID)) {
+                user.sendMessage(clans.getTranslation(user, "clans.commands.admin.clan.transfer.already-leader", "[player]", targetName));
+                return false;
+            }
+
+            // Transferir liderazgo
+            return handleAdminTransferLeadership(user, clan, targetUUID, targetName);
+        }
+
+        private boolean handleAdminTransferLeadership(User user, ClanManager.Clan clan, String targetUUID, String targetName) {
+            // Determinar el nuevo rango del líder actual
+            ClanManager.Clan.Rank newRank;
+            if (clan.getCoLeaderCount() < clan.getMaxCoLeaders()) {
+                newRank = ClanManager.Clan.Rank.CO_LEADER;
+            } else if (clan.getCommanderCount() < clan.getMaxCommanders()) {
+                newRank = ClanManager.Clan.Rank.COMMANDER;
+            } else {
+                newRank = ClanManager.Clan.Rank.MEMBER;
+            }
+
+            // Obtener el nombre del líder actual
+            OfflinePlayer oldLeaderPlayer = Bukkit.getOfflinePlayer(UUID.fromString(clan.getOwnerUUID()));
+            String oldLeaderName = oldLeaderPlayer.getName() != null ? oldLeaderPlayer.getName() : "Desconocido";
+
+            // Transferir liderazgo
+            clan.setRank(clan.getOwnerUUID(), newRank);
+            clan.setRank(targetUUID, ClanManager.Clan.Rank.LEADER);
+            clan.setOwnerUUID(targetUUID);
+            clan.save();
+
+            // Notificar al administrador
+            user.sendMessage(clans.getTranslation(user, "clans.commands.admin.clan.transfer.success",
+                    "[clan]", clan.getDisplayName(),
+                    "[target]", targetName));
+
+            // Notificar al antiguo líder
+            User oldLeader = User.getInstance(UUID.fromString(clan.getOwnerUUID()));
+            if (oldLeader.isOnline()) {
+                oldLeader.sendMessage(clans.getTranslation(oldLeader, "clans.commands.admin.clan.transfer.notify-old-leader",
+                        "[clan]", clan.getDisplayName(),
+                        "[new_rank]", clans.getSettings().getRanks().getOrDefault(newRank.name().toLowerCase(), newRank.name()),
+                        "[admin]", user.getName()));
+            }
+
+            // Notificar al nuevo líder
+            User newLeader = User.getInstance(UUID.fromString(targetUUID));
+            if (newLeader.isOnline()) {
+                newLeader.sendMessage(clans.getTranslation(newLeader, "clans.commands.admin.clan.transfer.notify-new-leader",
+                        "[clan]", clan.getDisplayName(),
+                        "[admin]", user.getName()));
+            }
+
+            return true;
+        }
+
+        @Override
+        public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
+            if (args.size() == 1) {
+                String input = args.get(0).toLowerCase();
+                return Optional.of(clans.getClanManager().getAllClans().stream()
+                        .map(clan -> clans.stripColor(clan.getDisplayName()))
+                        .filter(name -> name.toLowerCase().startsWith(input))
+                        .collect(Collectors.toList()));
+            } else if (args.size() == 2) {
+                String clanName = args.get(0);
+                ClanManager.Clan clan = clans.getClanManager().getClanByName(clanName).orElse(null);
+                if (clan == null) {
+                    return Optional.of(List.of());
+                }
+                String input = args.get(1).toLowerCase();
+                return Optional.of(clan.getRanks().keySet().stream()
+                        .map(uuid -> {
+                            OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+                            return player.getName() != null ? player.getName() : "";
+                        })
+                        .filter(name -> !name.isEmpty() && name.toLowerCase().startsWith(input))
                         .collect(Collectors.toList()));
             }
             return Optional.of(List.of());

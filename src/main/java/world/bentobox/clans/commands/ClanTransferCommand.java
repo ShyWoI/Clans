@@ -53,7 +53,7 @@ public class ClanTransferCommand extends CompositeCommand {
 
         // Verificar si el jugador es el líder
         if (!clan.getOwnerUUID().equals(playerUUID)) {
-            user.sendMessage(clans.getTranslation(user, "clans.errors.not-leader"));
+            user.sendMessage(clans.getTranslation(user, "clans.commands.clan.transfer.not-leader"));
             return false;
         }
 

@@ -1,6 +1,5 @@
 package world.bentobox.clans.commands;
 
-import org.bukkit.Bukkit;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.clans.Clans;

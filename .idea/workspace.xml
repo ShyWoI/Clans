@@ -9,13 +9,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7255f22-bfd4-4b93-8171-730851024a62" name="Changes" comment="Ajuste del /clan transfer. Parche:&#10;Mensaje arreglado de cambio exitosos.Cmabio en el ClanData para ownerUUID">
+    <list default="true" id="a7255f22-bfd4-4b93-8171-730851024a62" name="Changes" comment="Creación del comando administrador /clanadmin transfer &lt;clan&gt; &lt;jugador&gt;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/Clans_jar/Clans.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/Clans_jar/Clans.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/commands/ClanAdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/commands/ClanAdminCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/commands/ClanTransferCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/bentobox/clans/commands/ClanTransferCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/locales/es-ES.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/locales/es-ES.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/locales/es-ES.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/locales/es-ES.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/commands/ClanAdminCommand$ClanReloadCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/commands/ClanAdminCommand$ClanReloadCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/commands/ClanAdminCommand$PenitenceClearCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/commands/ClanAdminCommand$PenitenceClearCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/commands/ClanAdminCommand$PenitenceCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/commands/ClanAdminCommand$PenitenceCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/world/bentobox/clans/commands/ClanAdminCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/world/bentobox/clans/commands/ClanAdminCommand.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +45,9 @@
     &quot;accountId&quot;: &quot;d0fc753d-7b7b-419d-b0c3-534b90e10ef9&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -95,7 +99,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1745119194232</updated>
-      <workItem from="1745119195325" duration="5380000" />
+      <workItem from="1745119195325" duration="5781000" />
+      <workItem from="1745200114810" duration="596000" />
     </task>
     <task id="LOCAL-00001" summary="Test">
       <option name="closed" value="true" />
@@ -137,7 +142,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745124070993</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Creación del comando administrador /clanadmin transfer &lt;clan&gt; &lt;jugador&gt;">
+      <option name="closed" value="true" />
+      <created>1745124742888</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1745124742890</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -159,6 +172,7 @@
     <MESSAGE value="Update correctly" />
     <MESSAGE value="New /clan transfer &lt;player&gt; - Change the leader of the clan" />
     <MESSAGE value="Ajuste del /clan transfer. Parche:&#10;Mensaje arreglado de cambio exitosos.Cmabio en el ClanData para ownerUUID" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajuste del /clan transfer. Parche:&#10;Mensaje arreglado de cambio exitosos.Cmabio en el ClanData para ownerUUID" />
+    <MESSAGE value="Creación del comando administrador /clanadmin transfer &lt;clan&gt; &lt;jugador&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Creación del comando administrador /clanadmin transfer &lt;clan&gt; &lt;jugador&gt;" />
   </component>
 </project>

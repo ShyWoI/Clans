@@ -198,7 +198,7 @@ public class ClanAdminCommand extends CompositeCommand {
             }
 
             // Obtener el clan
-            String clanName = args.get(0);
+            String clanName = args.getFirst();
             ClanManager.Clan clan = clans.getClanManager().getClanByName(clanName).orElse(null);
             if (clan == null) {
                 user.sendMessage(clans.getTranslation(user, "clans.commands.admin.clan.transfer.clan-not-found", "[clan]", clanName));
@@ -279,13 +279,13 @@ public class ClanAdminCommand extends CompositeCommand {
         @Override
         public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
             if (args.size() == 1) {
-                String input = args.get(0).toLowerCase();
+                String input = args.getFirst().toLowerCase();
                 return Optional.of(clans.getClanManager().getAllClans().stream()
                         .map(clan -> clans.stripColor(clan.getDisplayName()))
                         .filter(name -> name.toLowerCase().startsWith(input))
                         .collect(Collectors.toList()));
             } else if (args.size() == 2) {
-                String clanName = args.get(0);
+                String clanName = args.getFirst();
                 ClanManager.Clan clan = clans.getClanManager().getClanByName(clanName).orElse(null);
                 if (clan == null) {
                     return Optional.of(List.of());

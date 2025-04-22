@@ -256,6 +256,12 @@ clans:
         reject-tooltip: "Cancelar transferencia"
         success: "[prefix]&aLiderazgo transferido a [target]. Ahora eres [new_rank]."
         new-leader: "[prefix]&aHas sido nombrado líder del clan [clan]."
+      chat:
+        description: "Activa o desactiva el chat exclusivo del clan"
+        parameters: ""
+        enabled: "[prefix]&aChat del clan activado. Tus mensajes solo serán visibles para los miembros del clan."
+        disabled: "[prefix]&eChat del clan desactivado. Tus mensajes ahora son públicos."
+        format: "&6[Clan: [clan]] &e[player]: &f[message]"
     admin:
       clan:
         description: "Comandos administrativos para clanes"

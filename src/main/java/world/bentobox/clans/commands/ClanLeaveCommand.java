@@ -73,7 +73,7 @@ public class ClanLeaveCommand extends CompositeCommand {
         if (existingRequest != null) {
             // Verificar si la solicitud ha expirado
             long leaveTimeout = 120_000; // 2 minutos
-            if (System.currentTimeMillis() - existingRequest.timestamp > leaveTimeout) {
+            if (System.currentTimeMillis() - existingRequest.timestamp() > leaveTimeout) {
                 clans.leaveRequests.remove(userId);
                 user.sendMessage(clans.getTranslation(user, "clans.commands.clan.leave.timeout"));
                 sendLeaveConfirmation(user, clan.getDisplayName());
@@ -81,7 +81,7 @@ public class ClanLeaveCommand extends CompositeCommand {
             }
 
             // Confirmar si el comando coincide con la solicitud
-            if (!args.isEmpty() && clans.stripColor(args.getFirst()).equalsIgnoreCase(clans.stripColor(existingRequest.clanName))) {
+            if (!args.isEmpty() && clans.stripColor(args.getFirst()).equalsIgnoreCase(clans.stripColor(existingRequest.clanName()))) {
                 clans.leaveRequests.remove(userId);
                 // Eliminar al jugador del clan
                 clan.removeMember(playerUUID);

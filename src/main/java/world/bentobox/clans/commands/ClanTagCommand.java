@@ -95,13 +95,13 @@ public class ClanTagCommand extends CompositeCommand {
                 return false;
             }
             // Verificar timeout
-            if (currentTime - request.timestamp > REQUEST_TIMEOUT) {
+            if (currentTime - request.timestamp() > REQUEST_TIMEOUT) {
                 clans.tagRequests.remove(userId);
                 user.sendMessage(clans.getTranslation(user, "clans.commands.clan.tag.timeout"));
                 return false;
             }
             clans.tagRequests.remove(userId);
-            handleSetTag(user, request.newTag);
+            handleSetTag(user, request.newTag());
             return true;
         }
 

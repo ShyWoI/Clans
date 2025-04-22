@@ -1,6 +1,7 @@
 package world.bentobox.clans;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.milkbowl.vault.economy.Economy;
@@ -16,6 +17,7 @@ import world.bentobox.bentobox.api.user.User;
 import world.bentobox.clans.commands.ClanAdminCommand;
 import world.bentobox.clans.commands.ClanCommand;
 import world.bentobox.clans.data.PenitenceData;
+import world.bentobox.clans.listeners.ClanChatListener;
 import world.bentobox.clans.managers.ClanManager;
 
 import java.io.File;
@@ -35,11 +37,12 @@ public class Clans extends Addon implements Listener {
     public final Map<UUID, LeaveRequest> leaveRequests = new HashMap<>();
     public final Map<UUID, KickRequest> kickRequests = new HashMap<>();
     public final Map<UUID, BanRequest> banRequests = new HashMap<>();
-    public final Map<UUID, TransferRequest> transferRequests = new HashMap<>(); // Nuevo mapa
+    public final Map<UUID, TransferRequest> transferRequests = new HashMap<>();
     private final Map<UUID, Long> penitenceExpirations = new HashMap<>();
     public final Map<UUID, TagRequest> tagRequests = new HashMap<>();
     private world.bentobox.bentobox.database.Database<PenitenceData> penitenceDatabase;
     public final boolean warEventActive = false;
+    public final Map<UUID, Boolean> clanChatEnabled = new HashMap<>(); // Mapa para rastrear el estado del chat del clan
 
     public static class DisbandRequest {
         public String clanName;
@@ -63,14 +66,7 @@ public class Clans extends Addon implements Listener {
         }
     }
 
-    public static class LeaveRequest {
-        public final String clanName;
-        public final long timestamp;
-
-        public LeaveRequest(String clanName, long timestamp) {
-            this.clanName = clanName;
-            this.timestamp = timestamp;
-        }
+    public record LeaveRequest(String clanName, long timestamp) {
     }
 
     public static class KickRequest {
@@ -97,28 +93,10 @@ public class Clans extends Addon implements Listener {
         }
     }
 
-    public static class TagRequest {
-        public final String clanName;
-        public final String newTag;
-        public final long timestamp;
-
-        public TagRequest(String clanName, String newTag, long timestamp) {
-            this.clanName = clanName;
-            this.newTag = newTag;
-            this.timestamp = timestamp;
-        }
+    public record TagRequest(String clanName, String newTag, long timestamp) {
     }
 
-    public static class TransferRequest {
-        public final ClanManager.Clan clan;
-        public final String targetUUID;
-        public final long timestamp;
-
-        public TransferRequest(ClanManager.Clan clan, String targetUUID, long timestamp) {
-            this.clan = clan;
-            this.targetUUID = targetUUID;
-            this.timestamp = timestamp;
-        }
+    public record TransferRequest(ClanManager.Clan clan, String targetUUID, long timestamp) {
     }
 
     @Override
@@ -458,6 +436,7 @@ public class Clans extends Addon implements Listener {
         clanManager.loadAllClans();
         loadPenitences();
         Bukkit.getPluginManager().registerEvents(this, getPlugin());
+        Bukkit.getPluginManager().registerEvents(new ClanChatListener(this), getPlugin()); // Corrección aquí
         startRequestTimer();
         new ClansPlaceholders(this, getPlugin().getPlaceholdersManager());
 
@@ -589,6 +568,26 @@ public class Clans extends Addon implements Listener {
                     .replace("[max_members]", String.valueOf(clan.getMaxMembers()))
                     .replace("[members]", membersText);
             user.sendMessage(translated);
+        }
+    }
+
+    // Metodo para enviar mensajes al clan
+    public void sendClanMessage(User sender, ClanManager.Clan clan, Component message) {
+        Component clanPrefix = LegacyComponentSerializer.legacyAmpersand().deserialize("&6[Clan: " + clan.getDisplayName() + "]");
+        Component playerName = Component.text(sender.getName() + ": ", NamedTextColor.YELLOW);
+        Component formattedMessage = clanPrefix
+                .append(Component.space())
+                .append(playerName)
+                .append(Component.text(" ", NamedTextColor.WHITE))
+                .append(message.color(NamedTextColor.WHITE));
+
+        String messageAsString = LegacyComponentSerializer.legacyAmpersand().serialize(formattedMessage);
+
+        for (String memberUUID : clan.getRanks().keySet()) {
+            User member = User.getInstance(UUID.fromString(memberUUID));
+            if (member.isOnline()) {
+                member.sendMessage(messageAsString);
+            }
         }
     }
 }

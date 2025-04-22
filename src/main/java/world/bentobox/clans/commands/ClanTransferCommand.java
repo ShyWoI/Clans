@@ -76,7 +76,7 @@ public class ClanTransferCommand extends CompositeCommand {
                     return false;
                 }
                 clans.transferRequests.remove(userId);
-                return handleTransferLeadership(user, request.clan, request.targetUUID);
+                return handleTransferLeadership(user, request.clan(), request.targetUUID());
             }
         }
 
